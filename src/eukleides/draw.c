@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -370,8 +370,6 @@ void hatch_circle(void)
 
 	/* Conics */
 
-#define CONIC_DRAW_STEP	3
-
 double get_max(double x, double y)
 {
     double m, l;
@@ -395,7 +393,7 @@ void draw_parabolic_arc(double x0, double y0, double p, double f, double g,
     e = Acos(p/get_max(x0, y0) - 1);
     if (f < -e) f = -e;
     if (g > e) g = e;
-    for (t = f, n = 1; t <= g; t += CONIC_DRAW_STEP, n++) {
+    for (t = f, n = 1; t <= g; t += local_step, n++) {
 	parametric_parabola(&x, &y, t, x0, y0, p, c, s);
 	fprintf(output_file,"%7.4f %7.4f", x, y);
 	fputc(n % 4 ? ' ' : '\n', output_file);
@@ -410,7 +408,7 @@ void draw_elliptic_arc(double x0, double y0, double a, double b,
     double x, y, t;
     int n;
 
-    for (t = f, n = 1; t <= g; t += CONIC_DRAW_STEP, n++) {
+    for (t = f, n = 1; t <= g; t += local_step, n++) {
 	parametric_ellipse(&x, &y, t, x0, y0, a, b, c, s);
 	fprintf(output_file,"%7.4f %7.4f", x, y);
 	fputc(n % 4 ? ' ' : '\n', output_file);
@@ -427,7 +425,7 @@ void draw_branch(double i, double j, double x0, double y0, double a, double b,
 
     if (f > i) i = f;
     if (g < j) j = g;
-    for (t = i, n = 1; t <= j; t += CONIC_DRAW_STEP, n++) {
+    for (t = i, n = 1; t <= j; t += local_step, n++) {
 	parametric_hyperbola(&x, &y, t, x0, y0, a, b, c, s);
 	fprintf(output_file,"%7.4f %7.4f", x, y);
 	fputc(n % 4 ? ' ' : '\n', output_file);

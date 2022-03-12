@@ -1,3 +1,17 @@
+1.5.2
+
+Implemented optional drawing step for conics.
+
+Changed back install-info into ginstall-info in doc/Makefile.
+
+Wrote win32 replacements for  euktotex and euktopdf.
+
+Fixed basename determination in euktotex and euktopdf.
+
+Added readline replacement for win builds.
+
+Changed rindex into strrchr in eukleides/check.c.
+
 1.5.1
 
 Documentation revised and updated.

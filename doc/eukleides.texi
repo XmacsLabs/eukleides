@@ -123,7 +123,7 @@ copies.
 @top Eukleides Reference Manual
 
 This manual is for Eukleides, a language devoted to Euclidean geometry, as
-implemented in version 1.5.1 of the @command{eukleides} interpreter.
+implemented in version 1.5.2 of the @command{eukleides} interpreter.
 
 @menu
 * Introduction::
@@ -165,7 +165,7 @@ implemented in version 1.5.1 of the @command{eukleides} interpreter.
 @unnumbered Introduction
 
 This manual describes the second version of the Eukleides language, as
-implemented in the @command{eukleides} 1.5.1 interpreter. The first version of
+implemented in the @command{eukleides} 1.5.2 interpreter. The first version of
 the language was implemented in @command{eukleides} up to 1.0, which is not
 developed any longer. Even though both versions have rather close designs,
 there is no backwards compatibility.
@@ -1244,15 +1244,18 @@ Local parameters override global ones.
 @item Scale factor
 A number greater than 0 (default: 1).
 @item Point shape
-@code{dot} (default), @code{disc}, @code{box}, @code{plus}, @code{cross}
+@code{dot} (default), @code{disc}, @code{box}, @code{plus}, @code{cross}.
 @item Line style
 @code{full} (default), @code{dashed}, @code{dotted}.
 @item Partition
-@code{entire} (default), @code{half}
+@code{entire} (default), @code{half}.
 @item Direction
-@code{forth} (default), @code{back}
+@code{forth} (default), @code{back}.
 @item Endings
-@code{none} (default), @code{arrow}, @code{arrows}
+@code{none} (default), @code{arrow}, @code{arrows}.
+@item Conics draw step
+An angular parameter (default: 3@deg{}) setting the current drawing step
+(with respect of the parametric representation).
 @item Font
 @code{font(@var{s})} where @var{s} is a string containing the font description.
 @end table
@@ -1312,12 +1315,12 @@ Hatches circle @math{c} where @var{list} may contain color and scale
 parameters. The angular parameter @math{a} determines the direction of the
 hatches. The scale factor determines the spacing of the hatches (default: 1.5 mm).
 @item draw c @var{list}
-Draws conic @math{c} where @var{list} may contain color, scale and style
+Draws conic @math{c} where @var{list} may contain color, scale, style and step
 parameters.
 @item draw c a b @var{list}
 Draws conic @math{c} from argument @math{a} to argument @math{b} (with respect
 to the parametric representation of @math{c}) where @var{list} may contain
-color, scale, style, direction and endings parameters.
+color, scale, style, direction, endings and step parameters.
 @item draw l A a @var{list}
 Writes string @math{l} with respect to point @math{A} in direction @math{a},
 where @var{list} may contain color, scale and font parameters. The scale factor

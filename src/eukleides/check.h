@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c); Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify

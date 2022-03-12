@@ -50,7 +50,7 @@ install: $(INST_TARG)
 install_info: eukleides.info.gz
 	@echo "    Installing info pages"
 	@install -d $(INFO_DIR)
-	@install-info --quiet $<
+	@ginstall-info --quiet $< $(INFO_DIR)/dir
 	@install -m 0644 $< $(INFO_DIR)
 
 install_pdf: pdf
@@ -78,7 +78,7 @@ install_nosplit: html
 uninstall:
 	@$(RM) -r $(DOC_DIR)
 ifneq ($(findstring info,$(DOC)),)
-	@install-info --quiet --remove eukleides
+	@ginstall-info --quiet --remove eukleides $(INFO_DIR)/dir
 	@$(RM) $(INFO_DIR)/eukleides.info.gz
 endif
 

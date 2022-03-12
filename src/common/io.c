@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#ifndef __win__
 #include <readline/readline.h>
+#endif
 #include "error.h"
 #include "args.h"
 #include "core.h"
@@ -142,6 +144,18 @@ void check_data_file(void)
 	if (data_file == NULL) runtime_error("Unable to read data file");
     }
 }
+
+#ifdef __win__
+char* readline(char* msg)
+{
+    char c;
+
+    printf(msg);
+    start_buffer();
+    while ((c = getchar()) && c != EOF && c != '\n' && c != '\r') add_char(c);
+    return get_buffer();
+}
+#endif
 
 void input_num(void)
 {

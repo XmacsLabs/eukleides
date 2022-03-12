@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -107,7 +107,7 @@ void set_font(char *descriptor)
 
     current_font_desc = descriptor;
     name = strdup(descriptor);
-    size = rindex(name, '-');
+    size = strrchr(name, '-');
     if (size == NULL) runtime_error(_("invalid font descriptor"));
     *(size++) = '\0';
     current_font_size = INVSCL(atof(size));

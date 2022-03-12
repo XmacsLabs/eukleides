@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -1889,6 +1889,9 @@ style_setting
 | CONST_NUM
     { SET_(set_global_size, $1); global_settings = 1; }
 
+| ang_exp
+    { XEQ_(set_global_step); global_settings = 1; }
+
 | FONT '(' str_exp ')'
     { XEQ_(set_global_font); global_settings = 1; }
 ;
@@ -2004,13 +2007,13 @@ pnt_exp pnt_draw_settings
 	clear_local_settings();
     }
 
-| con_exp basic_draw_settings
+| con_exp con_draw_settings
     {
 	XEQ_(draw_conic);
 	clear_local_settings();
     }
 
-| con_exp ang_exp ang_exp basic_draw_settings
+| con_exp ang_exp ang_exp con_arc_draw_settings
     {
 	XEQ_(draw_conic_arc);
 	clear_local_settings();
@@ -2075,6 +2078,32 @@ basic_draw_setting
 
 | arrow_setting
     { SET_(set_local_arrow, $1); local_settings = 1; }
+;
+
+con_draw_settings:
+| con_draw_setting
+| con_draw_settings ',' con_draw_setting
+;
+
+con_draw_setting:
+basic_draw_setting
+    { /* Nothing to do */ }
+
+| ang_exp
+    { XEQ_(set_local_step); local_settings = 1; }
+;
+
+con_arc_draw_settings:
+| con_arc_draw_setting
+| con_arc_draw_settings ',' con_arc_draw_setting
+;
+
+con_arc_draw_setting:
+path_draw_setting
+    { /* Nothing to do */ }
+
+| ang_exp
+    { XEQ_(set_local_step); local_settings = 1; }
 ;
 
 fill_setting:

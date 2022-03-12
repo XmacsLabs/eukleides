@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.1
+ *  Eukleides version 1.5.2
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,23 @@ void set_local_size(_param p)
 {
     local_size = p.num;
     if (local_size <= 0) runtime_error(_("invalid size"));
+}
+
+	/* Step */
+
+double global_step = 3;
+double local_step = 3;
+
+void set_global_step(void)
+{
+    global_step = local_step = POPn;
+    if (global_step <= 0) runtime_error(_("invalid size"));
+}
+
+void set_local_step(void)
+{
+    local_step = POPn;
+    if (local_step <= 0) runtime_error(_("invalid size"));
 }
 
 	/* Line style */
@@ -231,6 +248,7 @@ void restore_default_settings(void)
     global_arrow = local_arrow = NONE;
     global_color = local_color = BLACK;
     global_size = local_size = 1;
+    global_size = local_size = 3;
     global_font = local_font = 0;
     global_segment = local_segment = SIMPLE;
     global_angle = local_angle = SIMPLE;
@@ -246,6 +264,7 @@ void restore_global_settings(void)
     local_arrow = global_arrow;
     local_color = global_color;
     local_size = global_size;
+    local_step = global_step;
     local_font = 0;
     local_segment = global_segment;
     local_angle = global_angle;
