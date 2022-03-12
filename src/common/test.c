@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -17,6 +17,7 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include "error.h"
@@ -463,4 +464,19 @@ void display_output(void)
 #else
     PSHn(0);
 #endif
+}
+
+void for_test(void)
+{
+    double c, s, e;
+
+    c = POPn;
+    s = POPn;
+    e = POPn;
+
+    PSHn(s);
+    if ((c > e && s > 0) || (c < e && s < 0))
+	PSHn(0);
+    else
+	PSHn(1);
 }

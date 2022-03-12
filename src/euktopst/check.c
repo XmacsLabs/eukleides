@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -252,12 +252,12 @@ void check_hatch(double a)
 	hatchcolor = color_string(local_color);
 	nargs++;
     }
-    if (default_dist != current_hatchsep) {
-	fprintf(output_file, "\\psset{hatchsep=%g}\n", default_dist);
-	current_hatchsep = default_dist;
+    if (global_size != current_hatchsep) {
+	fprintf(output_file, "\\psset{hatchsep=%gpt}\n", HATCHSEP*global_size);
+	current_hatchsep = global_size;
     }
-    if (dist != current_hatchsep) {
-	hatchsep = dist;
+    if (local_size != current_hatchsep) {
+	hatchsep = HATCHSEP*local_size;
 	nargs++;
     }
 }
@@ -313,7 +313,7 @@ void put_local(void)
 	hatchcolor = NULL;
     }
     if (hatchsep) {
-	fprintf(output_file, "hatchsep=%g%c", hatchsep, punct(nargs));
+	fprintf(output_file, "hatchsep=%gpt%c", hatchsep, punct(nargs));
 	hatchsep = 0;
     }
 }

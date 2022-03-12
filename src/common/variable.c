@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -169,7 +169,8 @@ void store_str(_param p)
 
 void increment(_param p)
 {
-    push_param((_param)++((_symbol *)p.ptr)->content->value.number);
+    ((_symbol *)p.ptr)->content->value.number += POPn;
+    //push_param((_param)((_symbol *)p.ptr)->content->value.number);
 }
 
 void lift_num(_param p)

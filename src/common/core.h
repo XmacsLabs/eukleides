@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,10 @@ _param pop_param(void);
 #define POP(type)	(type *)pop_param().ptr
 
 typedef struct {
+#ifdef __debug__
+    const char* inst;
+    int arg;
+#endif
     void (*func)();
     _param param;
 } _instr;

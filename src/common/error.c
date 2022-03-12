@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#ifdef MO_DIR
 #include <libintl.h>
+#else
+#define gettext(msg) (msg)
+#endif
+
 #include "args.h"
 #include "module.h"
 #include "error.h"

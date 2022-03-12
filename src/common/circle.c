@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -198,7 +198,7 @@ void homothetic_circle(void)
     get_mem(val, _circle);
     val->x = O->x + k*(C->x - O->x);
     val->y = O->y + k*(C->y - O->y);
-    val->r = k*C->r;
+    val->r = fabs(k)*C->r;
     PSH(val);
 }
 

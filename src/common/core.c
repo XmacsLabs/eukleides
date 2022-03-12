@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -183,8 +183,34 @@ void set_cur_file(_param p)
     cur_file = (char *)p.ptr;
 }
 
+#ifdef __debug__
+void echo_itable(void)
+{
+    static int i = 0;
+    _instr* ins;
+
+    if (i) return;
+    for (ins = itable.tbl; ins < itable.last; ins++, i++)
+	switch(ins->arg) {
+	    case 0: fprintf(stderr, "%04d %-12s\n", i, ins->inst);
+		    break;
+	    case 1: fprintf(stderr, "%04d %-12s %p\n", i, ins->inst,
+			    ins->param.ptr);
+		    break;
+	    case 2: fprintf(stderr, "%04d %-12s %g\n", i, ins->inst,
+			    ins->param.num);
+		    break;
+	    case 3: fprintf(stderr, "%04d %-12s %04d\n", i, ins->inst,
+			    ins->param.addr);
+	}
+}
+#endif
+
 void exec_itable(void)
 {
+#ifdef __debug__
+    echo_itable();
+#endif
     for (itable.cur = itable.tbl; itable.cur < itable.last; itable.cur++)
 	(itable.cur->func)(itable.cur->param);
 }

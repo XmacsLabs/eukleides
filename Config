@@ -7,11 +7,12 @@ PREFIX=/usr/local
 BINARIES = eukleides euktopst
 
 # Localized keywords
-# Comment this out to disable this feature.
-LOCALES = fr
+# Uncomment to enable this feature.
+# LOCALES = fr
 
-# Formats for documentation
-DOC = info pdf html
+# Documentation
+# Alternative targets are 'pdf' and 'html'.
+DOC = info
 
 # Preferred HTML output
 # Comment this out for single HTML file.

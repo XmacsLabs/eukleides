@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -144,31 +144,29 @@ void extract_subset(_param p)
     PSH(val);
 }
 
+_set *set_vertex(double x, double y, _point* O, double S, double C, double n)
+{
+    _set *val;
+
+    if (n < 1) return NULL;
+    get_elem(val);
+    val->p->x = O->x + x;
+    val->p->y = O->y + y;
+    val->next = set_vertex(C*x-S*y, S*x+C*y, O, S, C, n-1);
+    return val;
+}
+
 void create_polygon(void)
 {
     _point *O;
-    double n, r, a, S, C;
-
-    _set *set_vertex(double x, double y, double n)
-    {
-	_set *val;
-
-	if (n < 1) return NULL;
-	get_elem(val);
-	val->p->x = O->x + x;
-	val->p->y = O->y + y;
-	val->next = set_vertex(C*x-S*y, S*x+C*y, n-1);
-	return val;
-    }
+    double n, r, a;
 
     a = POPn;
     r = POPn;
     O = POP(_point);
     n = POPn;
     if (n < 2) runtime_error(_("invalid vertices number"));
-    S = sin(2*M_PI/n);
-    C = cos(2*M_PI/n);
-    PSH(set_vertex(r*Cos(a), r*Sin(a), n));
+    PSH(set_vertex(r*Cos(a), r*Sin(a), O, sin(2*M_PI/n), cos(2*M_PI/n), n));
 }
 
 void translate_set(void)

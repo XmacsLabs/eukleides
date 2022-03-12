@@ -123,7 +123,7 @@ copies.
 @top Eukleides Reference Manual
 
 This manual is for Eukleides, a language devoted to Euclidean geometry, as
-implemented in version 1.5 of the @command{eukleides} interpreter.
+implemented in version 1.5.1 of the @command{eukleides} interpreter.
 
 @menu
 * Introduction::
@@ -164,9 +164,9 @@ implemented in version 1.5 of the @command{eukleides} interpreter.
 
 @unnumbered Introduction
 
-This manual describes the second version of the Eukleides language, which is
-implemented in the @command{eukleides} 1.5 interpreter. The first version of the
-language was implemented in @command{eukleides} up to 1.0, which is not
+This manual describes the second version of the Eukleides language, as
+implemented in the @command{eukleides} 1.5.1 interpreter. The first version of
+the language was implemented in @command{eukleides} up to 1.0, which is not
 developed any longer. Even though both versions have rather close designs,
 there is no backwards compatibility.
 
@@ -531,7 +531,8 @@ expected to be a segment, any subsequent point is ignored.
 Concatenates @math{s} and @math{t}. Each operand can be either a set or a
 point.
 @item s[i]
-Point of index @math{i} in set @math{s}. Indices start at 0.
+Point of index @math{i} in variable @math{s}, assuming @math{s} contains a set.
+Indices start at 0.
 @end table
 
 @cindex set related functions
@@ -1140,7 +1141,7 @@ locus l(t = a to b @{ step n @})
 
 The associated instruction block is repeated @math{n} times with values of
 number @math{t} increasing from @math{a} to @math{b}. Each put statement appends
-a point to the resulting set @math{l}. Default value for @math{n} is 100.
+a point to the resulting set @math{l}. Default value for @math{n} is 120.
 
 @subheading Examples
 
@@ -1148,7 +1149,7 @@ a point to the resulting set @math{l}. Default value for @math{n} is 100.
 A cardioid.
 
 @example
-locus C(t = O to 360)
+locus C(t = 0 to 360)
   put point(sin(t/2), t@deg{})
 end
 @end example
@@ -1291,7 +1292,7 @@ Fills the polygon corresponding to set @math{s}.
 Hatches the polygon corresponding to set @math{s}, where @var{list} may contain
 color and scale parameters. The angular parameter @math{a} determines the
 direction of the hatches. The scale factor determines the spacing of the
-hatches.
+hatches (default: 1.5 mm).
 @item draw l @var{list}
 Draws line @math{l} where @var{list} may contain color, scale, style, partition
 and direction parameters. Using @code{half} yields the ray having same origin
@@ -1309,7 +1310,7 @@ Fills circle @math{c}.
 @item draw [c] a @var{list}
 Hatches circle @math{c} where @var{list} may contain color and scale
 parameters. The angular parameter @math{a} determines the direction of the
-hatches. The scale factor determines the spacing of the hatches.
+hatches. The scale factor determines the spacing of the hatches (default: 1.5 mm).
 @item draw c @var{list}
 Draws conic @math{c} where @var{list} may contain color, scale and style
 parameters.
@@ -1325,7 +1326,7 @@ determines the distance from the center of the string to the point.
 Writes string @math{l} with respect to the middle of segment @math{s} in
 direction @math{a}, where @var{list} may contain color, scale and font
 parameters. The scale factor determines the distance from the center of the
-string to the middle of the segment. 
+string to the middle of the segment (default: 3 mm). 
 @end table
 
 @subheading Output setting commands
@@ -1436,7 +1437,7 @@ tick on the angle mark.
 Assuming variable @math{P} contains a point, writes the name of @math{P} in
 direction @math{a} from @math{P}, where @var{list} may contain color, scale and
 font parameters. The scale factor determines the distance from the center of the
-label to the point.
+label to the point (default: 3 mm).
 @end table
 
 @c -----------------------------------------------------------------------------
@@ -1690,9 +1691,11 @@ Number @math{x} if @var{assertion} is true, number @math{y} otherwise.
 @table @code
 @item while @var{assertion} @var{block} end
 Repeats @var{block} while @var{assertion} is true.
-@item for i = a to b @var{block} end
-Repeats @var{block} while incrementing number @math{i} from @math{a} to
-@math{b}.
+@item for i = a to b @{ step c @} @var{block} end
+Repeats @var{block} while incrementing number @math{i} by @math{c} (default: 1),
+from @math{a} to @math{b}. Numbers @math{b} and @math{c} are evaluated at each
+step. Iteration ends as soon as @math{i} is greater than or smaller than
+@math{b}, depending on the sign of @math{c}.
 @item for P in s @var{block} end
 Repeats @var{block} while point @math{P} runs through set @math{s}.
 @end table
@@ -1892,8 +1895,10 @@ name itself.
 @subheading Common options
 
 @table @code
-@item  -l, --local=@var{lang}
-Use keywords localized in language @var{lang}.
+@item  -l, --locale@{=@var{lang}@}
+Use keywords localized in language @var{lang}.  With no argument given,
+the current locale is set to the value of the LANG environment variable.
+This feature may be disabled.
 @item  -@numb{}, --interactive=@var{string}
 Modify interactive variables.
 @item  -v, --version
@@ -1966,9 +1971,11 @@ using @command{latex}.
 @cindex localized keywords
 
 Localized versions of the keywords are available (currently only French). The
-@w{@code{--local}} option allows to specify the desired locale, using the same
-format as locale environment variables, e.g. @code{fr_FR} or @code{fr_FR.utf8},
-depending on the default system charmap.
+@w{@code{--locale}} option allows to specify the desired locale. With no
+argument given, the current locale is set to the value of the LANG environment
+variable. Otherwise the argument has to be a valid locale identifier, e.g.
+@code{fr_FR} or @code{fr_FR.utf8}, depending on the default charmap.
+This feature may be disabled at build time.
 
 @example
 @end example

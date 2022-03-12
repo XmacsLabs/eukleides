@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -216,7 +216,7 @@ void fill_polygon(void)
 
 void hatch_polygon(void)
 {
-    double a, C, S, l, x, y;
+    double a, C, S, l, x, y, dist;
     _set* s;
     int n;
 
@@ -227,6 +227,7 @@ void hatch_polygon(void)
     l = hypot(max_x-min_x, max_y-min_y);
     x = (max_x + min_x - l*(C + S))/2;
     y = (max_y + min_y - l*(S - C))/2;
+    dist = SIZE(HATCHSEP);
     if (s == NULL) return;
     check_basic_settings();
     check_hatch();
@@ -276,25 +277,25 @@ void draw_line(void)
     } else {
 	t = Tan(l->a);
 	z = t*(m_x-l->x)+l->y;
-	if (z >= m_y && z < M_y) {
+	if (z >= m_y && z <= M_y) {
 	    x[i] = m_x;
 	    y[i] = z;
 	    i++;
 	}
 	z = t*(M_x-l->x)+l->y;
-	if (z > m_y && z <= M_y) {
+	if (z >= m_y && z <= M_y) {
 	    x[i] = M_x;
 	    y[i] = z;
 	    i++;
 	}
 	z =(m_y-l->y)/t+l->x;
-	if (z > m_x && z <= M_x) {
+	if (z > m_x && z < M_x && i < 2) {
 	    x[i] = z ;
 	    y[i] = m_y;
 	    i++;
 	}
 	z = (M_y-l->y)/t+l->x;
-	if (z >= m_x && z < M_x) {
+	if (z > m_x && z < M_x && i < 2) {
 	    x[i] = z;
 	    y[i] = M_y;
 	    i++;
@@ -302,7 +303,7 @@ void draw_line(void)
     }
     if (i == 2)
 	fprintf(output_file, "%7.4f %7.4f moveto %7.4f %7.4f lineto stroke\n",
-	x[0], y[0], x[1], y[1]);
+		x[0], y[0], x[1], y[1]);
 }
 
 void draw_circle(void)
@@ -348,7 +349,7 @@ void fill_circle(void)
 
 void hatch_circle(void)
 {
-    double a, C, S, l, x, y;
+    double a, C, S, l, x, y, dist;
     _circle* c;
 
     a = POPn;
@@ -358,6 +359,7 @@ void hatch_circle(void)
     l = hypot(max_x-min_x, max_y-min_y);
     x = (max_x + min_x - l*(C + S))/2;
     y = (max_y + min_y - l*(S - C))/2;
+    dist = SIZE(HATCHSEP);
     check_basic_settings();
     check_hatch();
     fprintf(output_file,
@@ -417,30 +419,31 @@ void draw_elliptic_arc(double x0, double y0, double a, double b,
     fprintf(output_file,"moveto %d {lineto} repeat stroke\n", n - 2);
 }
 
+void draw_branch(double i, double j, double x0, double y0, double a, double b,
+	double f, double g, double c, double s)
+{
+    double x, y, t;
+    int n;
+
+    if (f > i) i = f;
+    if (g < j) j = g;
+    for (t = i, n = 1; t <= j; t += CONIC_DRAW_STEP, n++) {
+	parametric_hyperbola(&x, &y, t, x0, y0, a, b, c, s);
+	fprintf(output_file,"%7.4f %7.4f", x, y);
+	fputc(n % 4 ? ' ' : '\n', output_file);
+    }
+    if (n % 4 != 1) fputc('\n', output_file);
+    fprintf(output_file,"moveto %d {lineto} repeat stroke\n", n - 2);
+}
+
 void draw_hyperbolic_arc(double x0, double y0, double a, double b,
 			 double f, double g, double c, double s)
 {
     double e;
 
-    void draw_branch(double i, double j)
-    {
-	double x, y, t;
-	int n;
-
-	if (f > i) i = f;
-	if (g < j) j = g;
-	for (t = i, n = 1; t <= j; t += CONIC_DRAW_STEP, n++) {
-	    parametric_hyperbola(&x, &y, t, x0, y0, a, b, c, s);
-	    fprintf(output_file,"%7.4f %7.4f", x, y);
-	    fputc(n % 4 ? ' ' : '\n', output_file);
-	}
-	if (n % 4 != 1) fputc('\n', output_file);
-	fprintf(output_file,"moveto %d {lineto} repeat stroke\n", n - 2);
-    }
-
     e = Atan(b/get_max(x0, y0));
-    if (f < -e) draw_branch(-180 + e, -e);
-    if (g > e) draw_branch(e, 180 - e);
+    if (f < -e) draw_branch(-180 + e, -e, x0, y0, a, b, f, g, c, s);
+    if (g > e) draw_branch(e, 180 - e, x0, y0, a, b, f, g, c, s);
 }
 
 void draw_conic(void)
@@ -495,7 +498,7 @@ void draw_conic_arc(void)
 
 void draw_string(_param p)
 {
-    double a, x, y;
+    double a, x, y, dist;
     _point *O;
     _set *s;
 
@@ -513,6 +516,7 @@ void draw_string(_param p)
 	x = O->x;
 	y = O->y;
     }
+    dist = SIZE(DEFAULT_DIST);
     check_color();
     check_font();
     check_print();
@@ -557,30 +561,31 @@ void label_segment(void)
     }
 }
 
+void draw_mark(_point* B, double r, double a, double b)
+{
+    fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f %7.4f arc stroke\n",
+	    B->x, B->y, r, a, b);
+}
+
+void set_xy(_point* A, _point* B, _point* C, double d,
+	double* x1, double* y1, double* x2, double* y2)
+{
+    double l;
+
+    l = distance(B, A);
+    if (ZERO(l)) runtime_error(_("invalid angle"));
+    *x1 = d*(A->x - B->x)/l;
+    *y1 = d*(A->y - B->y)/l;
+    l = distance(B, C);
+    if (ZERO(l)) runtime_error(_("invalid angle"));
+    *x2 = d*(C->x - B->x)/l;
+    *y2 = d*(C->y - B->y)/l;
+}
+
 void label_angle(void)
 {
-    double a, b, r, s, t,x1, y1, x2, y2;
+    double a, b, r, s, t, x1, y1, x2, y2;
     _point *A, *B, *C;
-
-    void draw_arc(void)
-    {
-	fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f %7.4f arc stroke\n",
-		B->x, B->y, r, a, b);
-    }
-
-    void set_xy(double d)
-    {
-	double l;
-
-	l = distance(B, A);
-	if (ZERO(l)) runtime_error(_("invalid angle"));
-	x1 = d*(A->x - B->x)/l;
-	y1 = d*(A->y - B->y)/l;
-	l = distance(B, C);
-	if (ZERO(l)) runtime_error(_("invalid angle"));
-	x2 = d*(C->x - B->x)/l;
-	y2 = d*(C->y - B->y)/l;
-    }
 
     C = POP(_point);
     B = POP(_point);
@@ -593,10 +598,10 @@ void label_angle(void)
     s = .08/scale;
     switch (local_angle) {
 	case SIMPLE:
-	    draw_arc();
+	    draw_mark(B, r, a, b);
 	    if (local_dec == DOTTED) {
 		check_dot();
-		set_xy(SIZE(M_SQRT2/8));
+		set_xy(A, B, C, SIZE(M_SQRT2/8), &x1, &y1, &x2, &y2);
 		fprintf(output_file, "%7.4f %7.4f %7.4f Dot\n",
 			B->x + x1 + x2, B->y + y1 + y2, SIZE(.05));
 	    }
@@ -609,7 +614,7 @@ void label_angle(void)
 	case DOUBLE:
 	    if (local_dec == DASHED) {
 		check_doubledash();
-		draw_arc();
+		draw_mark(B, r, a, b);
 		t = 8/local_size;
 		fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f %7.4f %7.4f DoubleDash\n",
 			t, r - s, r + s, (a + b)/2 - t/2, B->x, B->y);
@@ -622,7 +627,7 @@ void label_angle(void)
 	case TRIPLE:
 	    if (local_dec == DASHED) {
 		check_tripledash();
-		draw_arc();
+		draw_mark(B, r, a, b);
 		t = 8/local_size;
 		fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f %7.4f %7.4f TripleDash\n",
 			t, r - s, r + s, (a + b)/2 - t, B->x, B->y);
@@ -633,7 +638,7 @@ void label_angle(void)
 	    }
 	    break;
 	case RIGHT:
-	    set_xy(SIZE(.35));
+	    set_xy(A, B, C, SIZE(.35), &x1, &y1, &x2, &y2);
 	    fprintf(output_file,
 		    "%7.4f %7.4f moveto %7.4f %7.4f rlineto %7.4f %7.4f rlineto stroke\n",
 		    B->x + x1, B->y + y1, x2, y2, -x1, -y1);
@@ -645,15 +650,15 @@ void label_angle(void)
 	    break;
 	case FORTH:
 	    check_arrow();
-	    draw_arc();
-	    set_xy(r);
+	    draw_mark(B, r, a, b);
+	    set_xy(A, B, C, r, &x1, &y1, &x2, &y2);
 	    fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f Arrow\n",
 		    .1/scale, b + Acos(.12/scale), B->x + x2, B->y + y2);
 	    break;
 	case BACK:
 	    check_arrow();
-	    draw_arc();
-	    set_xy(r);
+	    draw_mark(B, r, a, b);
+	    set_xy(A, B, C, r, &x1, &y1, &x2, &y2);
 	    fprintf(output_file, "%7.4f %7.4f %7.4f %7.4f Arrow\n",
 		    .1/scale, a - Acos(.12/scale), B->x + x1, B->y + y1);
 	    break;
@@ -662,13 +667,14 @@ void label_angle(void)
 
 void label_point(_param p)
 {
-    double a;
+    double a, dist;
     _symbol *s;
     _point *O;
     char *c, *d;
     int n = 0, m = 0;
 
     a = POPn;
+    dist = SIZE(DEFAULT_DIST);
     s = (_symbol *)p.ptr;
     O = s->content->value.point;
     check_color();

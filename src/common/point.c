@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@ void create_point_polar(void)
 
 void create_point_on_segment(void)
 {
-    double x, d;
+    double x;
     _set *set;
     _point *A, *B;
     _point *val;
@@ -61,10 +61,8 @@ void create_point_on_segment(void)
     A = get_point(&set);
     B = get_point(&set);
     get_mem(val, _point);
-    d = distance(A, B);
-    if (ZERO(d)) runtime_error(_("invalid segment"));
-    val->x = A->x + x*(B->x - A->x)/d;
-    val->y = A->y + x*(B->y - A->y)/d;
+    val->x = A->x + x*(B->x - A->x);
+    val->y = A->y + x*(B->y - A->y);
     PSH(val);
 }
 

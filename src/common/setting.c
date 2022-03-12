@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -30,15 +30,10 @@
 
 double min_x = -2, min_y = -2, max_x = 8, max_y = 6, scale = 1;
 
-#define DEFAULT_DISTANCE	.3
-
-double dist = DEFAULT_DISTANCE, default_dist = DEFAULT_DISTANCE;
-
 void set_scale(void)
 {
     scale = POPn;
     if (scale <= 0) runtime_error(_("invalid scale factor"));
-    dist = default_dist = DEFAULT_DISTANCE/scale;
 }
 
 void set_box(_param p)
@@ -177,13 +172,6 @@ void set_local_font(void)
     local_font = 1;
 }
 
-	/* Distance */
-
-void set_distance(void)
-{
-    dist = POPn/scale;
-}
-
 	/* Segment label style */
 
 int global_segment = SIMPLE;
@@ -259,7 +247,6 @@ void restore_global_settings(void)
     local_color = global_color;
     local_size = global_size;
     local_font = 0;
-    dist = default_dist;
     local_segment = global_segment;
     local_angle = global_angle;
     local_dec = global_dec;

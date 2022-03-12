@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -85,31 +85,31 @@ void lines_intersection(void)
 
 #define dist(s)		a*(s)->p->x+b*(s)->p->y+c
 
+_set *line_segment_intersection(_set *s, double a, double b, double c, double d)
+{
+    _set *val, *t;
+    double e, f, g;
+
+    t = s->next;
+    if (t == NULL) return NULL;
+    e = dist(t);
+    if (d*e <= EPSILON && fabs(e) > EPSILON) {
+	get_elem(val);
+	f = fabs(d) + fabs(e);
+	g = f == 0 ? 0 : fabs(d)/f;
+	val->p->x = s->p->x + g*(t->p->x-s->p->x);
+	val->p->y = s->p->y + g*(t->p->y-s->p->y);
+	val->next = line_segment_intersection(t, a, b, c, e);
+	return val;
+    }
+    return line_segment_intersection(t, a, b, c, e);
+}
+
 void line_set_intersection(void)
 {
     _line *l;
     _set *s;
     double a, b, c;
-
-    _set *line_segment_intersection(_set *s, double d)
-    {
-	_set *val, *t;
-	double e, f, g;
-
-	t = s->next;
-	if (t == NULL) return NULL;
-	e = dist(t);
-	if (d*e <= EPSILON) {
-	    get_elem(val);
-	    f = fabs(d) + fabs(e);
-	    g = f == 0 ? 0 : fabs(d)/f;
-	    val->p->x = s->p->x + g*(t->p->x-s->p->x);
-	    val->p->y = s->p->y + g*(t->p->y-s->p->y);
-	    val->next = line_segment_intersection(t, e);
-	    return val;
-	}
-	return line_segment_intersection(t, e);
-    }
 
     s = POP(_set);
     l = POP(_line);
@@ -120,7 +120,7 @@ void line_set_intersection(void)
     a = Sin(l->a);
     b = -Cos(l->a);
     c = -a*l->x-b*l->y;
-    PSH(line_segment_intersection(s, dist(s)));
+    PSH(line_segment_intersection(s, a, b, c, dist(s)));
 }
 
 int solve(double *x1, double *x2, double a, double b, double c)
@@ -328,47 +328,47 @@ void circles_intersection(void)
 #undef dist
 #define dist(s)	hypot((s)->p->x - c->x, (s)->p->y - c->y)
 
+_set *circle_segment_intersection(_set *s, _circle* c, double d)
+{
+    _set *v1 = NULL, *v2 = NULL, *t;
+    double e, f, x, y, u, v, t1, t2;
+    int n;
+
+    t = s->next;
+    if (t == NULL) return NULL;
+    e = dist(t);
+    if (d >= c->r || e >= c->r) {
+	f = distance(s->p, t->p);
+	x = s->p->x - c->x;
+	y = s->p->y - c->y;
+	u = (t->p->x - s->p->x)/f;
+	v = (t->p->y - s->p->y)/f;
+	n = solve(&t1, &t2, 1, 2*(x*u + y*v), x*x + y*y - c->r*c->r);
+	if (n > 0) {
+	    if (n > 1 && t2 >= 0 && t2 <= f) {
+		get_elem(v2);
+		v2->p->x = s->p->x + u*t2;
+		v2->p->y = s->p->y + v*t2;
+		v2->next = circle_segment_intersection(t, c, e);
+	    }
+	    if (t1 >= 0 && t1 <= f) {
+		get_elem(v1);
+		v1->p->x = s->p->x + u*t1;
+		v1->p->y = s->p->y + v*t1;
+		if (v2) v1->next = v2;
+		else v1->next = circle_segment_intersection(t, c, e);
+	    }
+	    if (v1) return v1;
+	    if (v2) return v2;
+	}
+    }
+    return circle_segment_intersection(t, c, e);
+}
+
 void circle_set_intersection(void)
 {
     _circle *c;
     _set *s;
-
-    _set *circle_segment_intersection(_set *s, double d)
-    {
-	_set *v1 = NULL, *v2 = NULL, *t;
-	double e, f, x, y, u, v, t1, t2;
-	int n;
-
-	t = s->next;
-	if (t == NULL) return NULL;
-	e = dist(t);
-	if (d >= c->r || e >= c->r) {
-	    f = distance(s->p, t->p);
-	    x = s->p->x - c->x;
-	    y = s->p->y - c->y;
-	    u = (t->p->x - s->p->x)/f;
-	    v = (t->p->y - s->p->y)/f;
-	    n = solve(&t1, &t2, 1, 2*(x*u + y*v), x*x + y*y - c->r*c->r);
-	    if (n > 0) {
-		if (n > 1 && t2 >= 0 && t2 <= f) {
-		    get_elem(v2);
-		    v2->p->x = s->p->x + u*t2;
-		    v2->p->y = s->p->y + v*t2;
-		    v2->next = circle_segment_intersection(t, e);
-		}
-		if (t1 >= 0 && t1 <= f) {
-		    get_elem(v1);
-		    v1->p->x = s->p->x + u*t1;
-		    v1->p->y = s->p->y + v*t1;
-		    if (v2) v1->next = v2;
-		    else v1->next = circle_segment_intersection(t, e);
-		}
-		if (v1) return v1;
-		if (v2) return v2;
-	    }
-	}
-	return circle_segment_intersection(t, e);
-    }
 
     s = POP(_set);
     c = POP(_circle);
@@ -376,5 +376,5 @@ void circle_set_intersection(void)
 	PSH(NULL);
 	return;
     }
-    PSH(circle_segment_intersection(s, dist(s)));
+    PSH(circle_segment_intersection(s, c, dist(s)));
 }

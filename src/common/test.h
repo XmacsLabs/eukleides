@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -104,3 +104,5 @@ void eps_output(void);
 void pstricks_output(void);
 
 void display_output(void);
+
+void for_test(void);

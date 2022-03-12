@@ -1,4 +1,4 @@
-.TH EUKLEIDES 1 2010/01/08 Eukleides "Eukleides Manual"
+.TH EUKLEIDES 1 2010/02/16 Eukleides "Eukleides Manual"
 .SH NAME
 eukleides - Eukleides interpreter to PostScript
 .SH SYNOPSIS
@@ -18,10 +18,13 @@ using for instance ImageMagick's
 .BR convert (1).
 .SH OPTIONS
 .TP
-\fB-l\fP, \fB--local\fP=\fILANG\fP
+\fB-l\fP, \fB--locale\fP[=\fILANG\fP]
 Use localized keywords.
-The format for \fILANG\fP is the one of locale environment variables,
-e.g. 'fr_FR' or 'fr_FR.utf8', depending on the default system charmap. 
+With no argument given, the current locale is set to the value of the
+LANG environment variable.
+Otherwise \fILANG\fP has to be a valid locale identifier, e.g. 'fr_FR'
+or 'fr_FR.utf8', depending on the default charmap. 
+This feature may be disabled.
 .TP
 \fB-o\fP, \fB--output\fP[=\fIOUTPUTFILE\fP]
 Set an output file name.

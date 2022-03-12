@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -20,8 +20,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <getopt.h>
+
+#ifdef MO_DIR
 #include <libintl.h>
 #include <locale.h>
+#endif
+
 #include "error.h"
 #include "core.h"
 #include "strings.h"
@@ -40,7 +44,7 @@ int opt_batchmode;
 
 void print_version(void)
 {
-    printf("Euktopst version 1.5.0\n"
+    printf("Euktopst version 1.5.1\n"
 	   "Copyright (c) Christian Obrecht 2004-2010\n");
     exit(EXIT_SUCCESS);
 }
@@ -48,7 +52,11 @@ void print_version(void)
 void print_help (void)
 {
     printf("Usage is: euktopst [<option> ...] <input_file>\n"
-	   "-l, --local=<lang>\t\tUse localized keywords.\n"
+#ifdef MO_DIR
+	   "-l, --locale[=<lang>]\t\tUse localized keywords.\n"
+#else
+	   "-l, --locale[=<lang>]\t\tDisabled localization feature.\n"
+#endif
 	   "-o, --output[=<output_file>]\tSet an output file name.\n"
 	   "-#, --interactive=<string>\tModify interactive variables.\n"
 	   "-b, --batchmode[=<data_file>]\tDon't stop for input.\n"
@@ -61,7 +69,7 @@ void process_args(int argc, char *argv[])
 {
     int c, option_index;
     static struct option long_options[] = {
-	{"local", 0, 0, 'l'},
+	{"locale", 2, 0, 'l'},
 	{"output", 2, 0, 'o'},
 	{"interactive", 1, 0, '#'},
 	{"batchmode", 2, 0, 'b'},
@@ -72,9 +80,15 @@ void process_args(int argc, char *argv[])
 
     opterr = 0;
     do {
-	c = getopt_long(argc, argv, "lo::#:b::vh", long_options, &option_index);
+	c = getopt_long(argc, argv, "l::o::#:b::vh", long_options, &option_index);
 	switch (c) {
-	    case 'l': lang = getenv("LC_ALL");
+	    case 'l':
+#ifdef MO_DIR
+		      if (optarg) lang = optarg;
+		      else lang = getenv("LANG");
+#else
+		      fatal_error("Disabled feature");
+#endif
 		      break;
 	    case 'o': opt_output = 1;
 		      output_name = optarg;
@@ -97,7 +111,9 @@ void process_args(int argc, char *argv[])
 	output_name = get_output_name(input_name, ".pst");
     }
 
-    setlocale(LC_ALL, lang);
+#ifdef MO_DIR
+    setlocale(LC_MESSAGES, lang);
     bindtextdomain("eukleides", MO_DIR);
     textdomain("eukleides");
+#endif
 }

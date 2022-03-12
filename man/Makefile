@@ -11,6 +11,7 @@ man: $(MAN_PAGES)
 	@gzip -c $< > $@
 
 install: $(MAN_PAGES)
+	@install -d $(MAN_DIR)
 	@install -m 0644 $^ $(MAN_DIR)
 
 uninstall:

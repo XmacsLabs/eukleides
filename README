@@ -1,5 +1,5 @@
 
-                        EUKLEIDES version 1.5.0
+                        EUKLEIDES version 1.5.1
 
                 Copyright (c) Christian Obrecht 2004-2010
 
@@ -45,10 +45,16 @@ option) any later version.
 3. INSTALL
 
 The present Eukleides distribution was developed on a Debian GNU/Linux
-platform. It should build on most of the recent Unix flavors, provided
-some common packages are installed (e.g. flex, bison, gettext, readline,
-perl, texinfo, etc.).
+platform. It should build on most of the recent Unices, provided some
+common tools are installed. For instance, when using a Debian based
+distribution, you may need to install the following packages: flex,
+bison, libreadline-dev, texinfo. When enabling localized keywords, you
+may additionally need to install gettext and perl.
 
+    Eukleides is reported to build on Mac OS X using the default build
+settings, i.e. disabled localization feature and info documentation
+format. Any help on enabling localization on this platform is welcome.
+ 
     As usual, type 'make' and 'make install' on command line. This will
 install the interpreters, the scripts, the 'eukleides' LaTeX package,
 the available locales, the reference manual (in info format, PDF, and

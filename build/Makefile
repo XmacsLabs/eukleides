@@ -13,8 +13,11 @@ YACC = bison
 YFLAGS = -d
 CC = gcc
 IFLAGS = -I$(COMMON_DIR) -I$(MAIN_DIR) -I$(BUILD_DIR) 
-CFLAGS = -Wall -D__$(BINARY)__ -DMO_DIR=\"$(MO_DIR)\" $(IFLAGS)
-LDFLAGS = -lcurses -lreadline -lm
+ifneq ($(strip $(LOCALES)),)
+MOFLAGS = -DMO_DIR=\"$(MO_DIR)\" 
+endif
+CFLAGS = -Wall -D__$(BINARY)__ $(IFLAGS) $(MOFLAGS)
+LDFLAGS = -lncurses -lreadline -lm
 VPATH = $(COMMON_DIR):$(MAIN_DIR):$(BUILD_DIR)
 
 $(BINARY):
@@ -25,7 +28,7 @@ $(BUILD_DIR)/parser.tab.h $(BUILD_DIR)/parser.tab.c: $(COMMON_DIR)/parser.y
 
 $(BUILD_DIR)/lex.yy.c: $(COMMON_DIR)/lexer.l $(BUILD_DIR)/parser.tab.h
 	@echo "    Building lexer"
-	@$(LEX) $(LFLAGS) -o $@ $<
+	@$(LEX) $(LFLAGS) -o$@ $<
 
 SOURCES := $(wildcard $(COMMON_DIR)/*.c) \
            $(wildcard $(MAIN_DIR)/*.c) \

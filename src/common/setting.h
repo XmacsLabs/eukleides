@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -16,6 +16,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __euktopst__
+#define HATCHSEP    4
+#else
+#define HATCHSEP    .15
+#endif
+#define DEFAULT_DIST    .3
 
 extern double min_x, min_y, max_x, max_y, scale;
 
@@ -92,13 +99,6 @@ extern char *local_font_desc;
 extern int global_font;
 
 extern int local_font;
-
-
-void set_distance(void);
-
-extern double dist;
-
-extern double default_dist;
 
 
 void set_global_segment(_param p);

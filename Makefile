@@ -45,7 +45,7 @@ $(INSTALL_BINARIES):
 
 install_scr:
 	@echo "Installing scripts"
-	@install scripts/* $(BIN_DIR)
+	@install bash/* $(BIN_DIR)
 
 install_tex:
 	@echo "Installing TeX files"
@@ -62,7 +62,9 @@ endif
 install_doc:
 	@echo "Installing documentation"
 	@$(MAKEC) doc install
+ifneq ($(LOC),)
 	@$(MAKEC) po install_doc
+endif
 
 install_man:
 	@echo "Installing man pages"
@@ -77,7 +79,7 @@ uninstall_bin:
 
 uninstall_scr:
 	@echo "Uninstalling scripts"
-	@$(RM) $(addprefix $(BIN_DIR)/,$(notdir $(wildcard scripts/*)))
+	@$(RM) $(addprefix $(BIN_DIR)/,$(notdir $(wildcard bash/*)))
 
 uninstall_tex:
 	@echo "Uninstalling TeX files"

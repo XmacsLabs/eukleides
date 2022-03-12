@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -603,7 +603,7 @@ step_number:
 STEP num_exp
     { /* Nothing to do */ }
 | /* Empty */
-    { PSH_(100.); }
+    { PSH_(120.); }
 ;
 
 interactive:
@@ -1530,7 +1530,11 @@ scale_arg:
 
 print_command:
 OUTPUT
-    { output = 0; }
+    {
+	XEQ_(put_preamble);
+	preamble = 1;
+	output = 0;
+    }
 | PRINT
     { output = 1; }
 | ERROR
@@ -1773,14 +1777,15 @@ block END
 
 | FOR variable '=' num_exp
     {
-	store_mark();
 	set_type($2, _NUMBER);
 	XEQ(store_num, $2);
+	store_mark();
     }
   TO num_exp
+  step
     {
         XEQ(recall_num, $2);
-	XEQ_(num_geq);
+	XEQ_(for_test);
 	JPZ(1);
 	store_mark();
     }
@@ -1805,6 +1810,12 @@ block END
 	back_patch();
 	GTO(pop_mark());
     }
+;
+
+step: /* Empty */
+    { PSH_(1.); }
+| STEP num_exp
+    { /* Nothing to do */ }
 ;
 
 drawing:
@@ -2080,8 +2091,8 @@ hatch_setting:
 color_setting
     { SET_(set_local_color, $1); local_settings = 1; }
 
-| num_exp
-    { XEQ_(set_distance); local_settings = 1; }
+| CONST_NUM
+    { SET_(set_local_size, $1); local_settings = 1; }
 ;
 
 lin_draw_settings:
@@ -2110,7 +2121,7 @@ color_setting
     { SET_(set_local_color, $1); local_settings = 1; }
 
 | CONST_NUM
-    { SET_(set_distance, $1); local_settings = 1; }
+    { SET_(set_local_size, $1); local_settings = 1; }
 
 | FONT '(' str_exp ')'
     { XEQ_(set_local_font); local_settings = 1; }

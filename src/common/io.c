@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <readline/readline.h>
 #include "error.h"
 #include "args.h"
@@ -27,6 +28,7 @@
 #include "symbol.h"
 #include "compiler.h"
 #include "strings.h"
+#include "utils.h"
 
 int output;
 
@@ -81,7 +83,11 @@ void close_result_file(void)
 
 void print_num(void)
 {
-    fprintf(handle(), "%g", POPn);
+    double x;
+
+    x = POPn;
+    if (ZERO(x)) x = 0.;
+    fprintf(handle(), "%g", x);
 }
 
 void print_pnt(void)
@@ -90,9 +96,9 @@ void print_pnt(void)
 
     A = POP(_point);
 #ifdef __euktopst__
-    fprintf(handle(), "(%g,%g)", A->x, A->y);
+    fprintf(handle(), "(%7.4f,%7.4f)", A->x, A->y);
 #else
-    fprintf(handle(), "%g %g", A->x, A->y);
+    fprintf(handle(), "%7.4f %7.4f", A->x, A->y);
 #endif
 }
 
@@ -103,15 +109,15 @@ void print_set(void)
     s = POP(_set);
 #ifndef __euktopst__
     if (s != NULL) {
-	fprintf(handle(), "%g %g", s->p->x, s->p->y);
+	fprintf(handle(), "%7.4f %7.4f", s->p->x, s->p->y);
 	s = s->next;
     }
 #endif
     while (s != NULL) {
 #ifdef __euktopst__
-	    fprintf(handle(), "(%g,%g)", s->p->x, s->p->y);
+	    fprintf(handle(), "(%7.4f,%7.4f)", s->p->x, s->p->y);
 #else
-	    fprintf(handle(), " %g %g", s->p->x, s->p->y);
+	    fprintf(handle(), " %7.4f %7.4f", s->p->x, s->p->y);
 #endif
 	    s = s->next;
     }

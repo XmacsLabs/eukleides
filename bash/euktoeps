@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Eukleides version 1.5.0
+#  Eukleides version 1.5.1
 #  Copyright (c) Christian Obrecht 2004-2010
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ usage() {
 cat <<- USAGE
 Usage is: euktoeps [<option> ...] <input_file>
 -i, --include=<string>		Include LaTeX directives in preamble.
--l, --local=<lang>		Use localized keywords.
+-l, --locale[=<lang>]		Use localized keywords (possibly disabled).
 -#, --interactive=<string>	Modify interactive variables.
 -d, --data=<data_file>		Use specific data.
 -v, --version			Print version number and exit.
@@ -31,7 +31,7 @@ USAGE
 exit $1
 }
 
-args=$(getopt -o i:l#:d:vh --long include:,local,interactive:,data:,version,help \
+args=$(getopt -o i:l::#:d:vh --long include:,locale::,interactive:,data:,version,help \
        -n 'Euktoeps' -- "$@")
 
 if [ $? -ne 0 ]
@@ -47,13 +47,15 @@ while true
 do
   case "$1" in
     -h|--help)		usage 0 ;;
-    -v|--version)	echo "Euktoeps version 1.5.0"
+    -v|--version)	echo "Euktoeps version 1.5.1"
 			echo "Copyright (c) Christian Obrecht 2004-2010"
 			exit 0 ;;
     -i|--include)	include=$2
 			shift 2 ;;
-    -l|--local)		lang=-l
-			shift ;;
+    -l|--local)		case "$2" in
+				"") lang=-l; shift 2 ;;
+				*)  lang=-l$2 ; shift 2 ;;
+			esac ;;
     -#|--interactive)	interactive=-#$2
 			shift 2 ;;
     -d|--data)		batchmode=-b$2;

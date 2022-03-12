@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -18,15 +18,21 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include "error.h"
 #include "core.h"
 #include "symbol.h"
 
 extern _itable itable;
 
+#ifdef __debug__
+void add_instr(const char* inst, int arg, void (*f)(void), _param p)
+{
+    itable.last->inst = inst;
+    itable.last->arg = arg;
+#else
 void add_instr(void (*f)(void), _param p)
 {
+#endif
     itable.last->func = f;
     itable.last->param = p;
     itable.last++;
@@ -52,7 +58,7 @@ void back_patch(void)
 {
     _instr *instr;
     instr = itable.tbl + pop_mark() - 1;
-    instr->param = (_param)(get_addr() + instr->param.addr);
+    instr->param.addr += get_addr();
 }
 
 void set_type(_symbol *symbol, int type)

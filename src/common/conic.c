@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.0
+ *  Eukleides version 1.5.1
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -277,8 +277,8 @@ void homothetic_conic(void)
     get_mem(val, _conic);
     val->x = O->x + k*(C->x - O->x);
     val->y = O->y + k*(C->y - O->y);
-    val->a = k*C->a;
-    val->b = k*C->b;
+    val->a = fabs(k)*C->a;
+    val->b = fabs(k)*C->b;
     val->d = C->d;
     val->type = C->type;
     PSH(val);
