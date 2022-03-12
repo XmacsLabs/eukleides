@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.3
+ *  Eukleides version 1.5.4
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -98,7 +98,7 @@ void print_pnt(void)
 
     A = POP(_point);
 #ifdef __euktopst__
-    fprintf(handle(), "(%7.4f,%7.4f)", A->x, A->y);
+    fprintf(handle(), "(%.4f,%.4f)", A->x, A->y);
 #else
     fprintf(handle(), "%7.4f %7.4f", A->x, A->y);
 #endif
@@ -117,7 +117,7 @@ void print_set(void)
 #endif
     while (s != NULL) {
 #ifdef __euktopst__
-	    fprintf(handle(), "(%7.4f,%7.4f)", s->p->x, s->p->y);
+	    fprintf(handle(), "(%.4f,%.4f)", s->p->x, s->p->y);
 #else
 	    fprintf(handle(), " %7.4f %7.4f", s->p->x, s->p->y);
 #endif

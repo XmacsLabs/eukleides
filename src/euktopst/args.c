@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.3
+ *  Eukleides version 1.5.4
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,7 @@ int opt_batchmode;
 
 void print_version(void)
 {
-    printf("Euktopst version 1.5.3\n"
+    printf("Euktopst version 1.5.4\n"
 	   "Copyright (c) Christian Obrecht 2004-2010\n");
     exit(EXIT_SUCCESS);
 }

@@ -1,3 +1,11 @@
+1.5.4
+
+Bug with labels in euktopst fixed.
+
+Printing of null values improved.
+
+Fixed formating of PSTricks output for conics.
+
 1.5.3
 
 Local scale parameter bug corrected.

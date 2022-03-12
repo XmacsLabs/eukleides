@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.3
+ *  Eukleides version 1.5.4
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -20,8 +20,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "core.h"
 #include "symbol.h"
+#include "utils.h"
 #include "error.h"
 
 	/* String table */
@@ -201,7 +203,10 @@ char tmp[31];
 
 void cat_num(void)
 {
-    add_string(tmp, snprintf(tmp, 14, "%g", POPn));
+    double x;
+
+    x = POPn;
+    add_string(tmp, snprintf(tmp, 14, "%g", fabs(x) < EPSILON ? 0 : x));
 }
 
 void cat_pnt(void)
@@ -210,9 +215,9 @@ void cat_pnt(void)
 
     A = POP(_point);
 #ifdef __euktopst__
-    add_string(tmp, snprintf(tmp, 31, "(%g, %g)", A->x, A->y));
+    add_string(tmp, snprintf(tmp, 31, "(%.4f, %.4f)", A->x, A->y));
 #else
-    add_string(tmp, snprintf(tmp, 28, "%g %g", A->x, A->y));
+    add_string(tmp, snprintf(tmp, 28, "%7.4f %7.4f", A->x, A->y));
 #endif 
 }
 
@@ -223,15 +228,15 @@ void cat_set(void)
     s = POP(_set);
 #ifndef __euktopst__
     if (s != NULL) {
-	add_string(tmp, snprintf(tmp, 28, "%g %g", s->p->x, s->p->y));
+	add_string(tmp, snprintf(tmp, 28, "%7.4f %7.4f", s->p->x, s->p->y));
 	s = s->next;
     }
 #endif
     while (s != NULL) {
 #ifdef __euktopst__
-	add_string(tmp, snprintf(tmp, 31, "(%g, %g)", s->p->x, s->p->y));
+	add_string(tmp, snprintf(tmp, 31, "(%.4f, %.4f)", s->p->x, s->p->y));
 #else	
-	add_string(tmp, snprintf(tmp, 29, " %g %g", s->p->x, s->p->y));
+	add_string(tmp, snprintf(tmp, 29, " %7.4f %7.4f", s->p->x, s->p->y));
 #endif
 	s = s->next;
     }

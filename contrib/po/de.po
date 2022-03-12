@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Eukleides 1.5.3\n"
+"Project-Id-Version: Eukleides 1.5.4\n"
 "Report-Msgid-Bugs-To: Peter Bartke <bartke@mi.fu-berlin.de>\n"
 "POT-Creation-Date: 2010-03-05 21:49+0100\n"
 "PO-Revision-Date: 2010-03-05 21:49+0100\n"
