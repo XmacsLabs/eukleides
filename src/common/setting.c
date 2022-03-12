@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.2
+ *  Eukleides version 1.5.3
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -248,7 +248,7 @@ void restore_default_settings(void)
     global_arrow = local_arrow = NONE;
     global_color = local_color = BLACK;
     global_size = local_size = 1;
-    global_size = local_size = 3;
+    global_step = local_step = 3;
     global_font = local_font = 0;
     global_segment = local_segment = SIMPLE;
     global_angle = local_angle = SIMPLE;

@@ -123,7 +123,7 @@ copies.
 @top Eukleides Reference Manual
 
 This manual is for Eukleides, a language devoted to Euclidean geometry, as
-implemented in version 1.5.2 of the @command{eukleides} interpreter.
+implemented in version 1.5.3 of the @command{eukleides} interpreter.
 
 @menu
 * Introduction::
@@ -165,7 +165,7 @@ implemented in version 1.5.2 of the @command{eukleides} interpreter.
 @unnumbered Introduction
 
 This manual describes the second version of the Eukleides language, as
-implemented in the @command{eukleides} 1.5.2 interpreter. The first version of
+implemented in the @command{eukleides} 1.5.3 interpreter. The first version of
 the language was implemented in @command{eukleides} up to 1.0, which is not
 developed any longer. Even though both versions have rather close designs,
 there is no backwards compatibility.
@@ -1551,11 +1551,11 @@ else @var{block} @} end
 
 @example
 if x < 0
-  write "x is negative."
+  print "x is negative."
 elseif x > 0
-  write "x is positive."
+  print "x is positive."
 else
-  write "x is null."
+  print "x is null."
 end
 @end example
 
@@ -1973,8 +1973,8 @@ using @command{latex}.
 
 @cindex localized keywords
 
-Localized versions of the keywords are available (currently only French). The
-@w{@code{--locale}} option allows to specify the desired locale. With no
+Localized versions of the keywords are available (currently German and French).
+The @w{@code{--locale}} option allows to specify the desired locale. With no
 argument given, the current locale is set to the value of the LANG environment
 variable. Otherwise the argument has to be a valid locale identifier, e.g.
 @code{fr_FR} or @code{fr_FR.utf8}, depending on the default charmap.

@@ -18,7 +18,7 @@ $(BINARIES):
 loc:
 ifneq ($(LOC),)
 	@echo "Making locales"
-	@$(MAKEC) po
+	@$(MAKEC) contrib/po
 endif
 
 doc: loc_doc
@@ -28,7 +28,7 @@ doc: loc_doc
 loc_doc:
 ifneq ($(LOC),)
 	@echo "Making locales documentation"
-	@$(MAKEC) po documentation
+	@$(MAKEC) contrib/po documentation
 endif
 
 .PHONY: man
@@ -38,7 +38,7 @@ man:
 	@$(MAKEC) man
 
 install: $(INSTALL_BINARIES) install_scr install_tex install_loc install_doc \
-         install_man
+         install_man install_exm
 
 $(INSTALL_BINARIES):
 	@export BINARY=$(basename $@) && $(MAKEC) build install
@@ -56,15 +56,20 @@ install_tex:
 install_loc:
 ifneq ($(LOC),)
 	@echo "Installing locales"
-	@$(MAKEC) po install
+	@$(MAKEC) contrib/po install
 endif
 
 install_doc:
 	@echo "Installing documentation"
 	@$(MAKEC) doc install
 ifneq ($(LOC),)
-	@$(MAKEC) po install_doc
+	@$(MAKEC) contrib/po install_doc
 endif
+
+install_exm:
+	@echo "Installing examples"
+	@install -d $(EXM_DIR)
+	@install -m 0644 contrib/examples/* $(EXM_DIR)
 
 install_man:
 	@echo "Installing man pages"
@@ -89,7 +94,7 @@ uninstall_tex:
 uninstall_loc:
 ifneq ($(LOC),)
 	@echo "Uninstalling locales"
-	@$(MAKEC) po uninstall
+	@$(MAKEC) contrib/po uninstall
 endif
 
 uninstall_doc:
@@ -109,7 +114,7 @@ clean_bin:
 clean_loc:
 ifneq ($(LOC),)
 	@echo "Cleaning locales"
-	@$(MAKEC) po clean
+	@$(MAKEC) contrib/po clean
 endif
 
 clean_doc:

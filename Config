@@ -8,7 +8,7 @@ BINARIES = eukleides euktopst
 
 # Localized keywords
 # Uncomment to enable this feature.
-# LOCALES = fr
+# LOCALES = de fr
 
 # Documentation
 # Alternative targets are 'pdf' and 'html'.
@@ -28,6 +28,7 @@ BIN_DIR = $(PREFIX)/bin
 SHARE_DIR = $(PREFIX)/share
 MO_DIR = $(SHARE_DIR)/locale
 DOC_DIR = $(SHARE_DIR)/doc/eukleides
+EXM_DIR = $(DOC_DIR)/examples
 MAN_DIR = $(SHARE_DIR)/man/man1
 INFO_DIR = $(SHARE_DIR)/info
 TEX_DIR = $(SHARE_DIR)/texmf/tex/latex/eukleides

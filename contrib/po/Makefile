@@ -1,7 +1,7 @@
 # Eukleides locales makefile
 # Copyright (c) Christian Obrecht 2004-2010
 
-include ../Config
+include ../../Config
 
 MO_FILES := $(addsuffix .mo, $(LOCALES))
 

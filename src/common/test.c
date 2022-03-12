@@ -1,5 +1,5 @@
 /*
- *  Eukleides version 1.5.2
+ *  Eukleides version 1.5.3
  *  Copyright (c) Christian Obrecht 2004-2010
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -33,12 +33,20 @@ void not(void)
 
 void and(void)
 {
-    PSHn(pop_param().addr && pop_param().addr);
+    int a, b;
+
+    a = pop_param().addr;
+    b = pop_param().addr;
+    PSHn(a && b);
 }
 
 void or(void)
 {
-    PSHn(pop_param().addr || pop_param().addr);
+    int a, b;
+
+    a = pop_param().addr;
+    b = pop_param().addr;
+    PSHn(a || b);
 }
 
 void ternary(void)
